@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import api from '../api';
-import { Bell, Check } from 'lucide-react';
-
-interface Notification {
-  id: number;
-  message: string;
-  link: string;
-  is_read: boolean;
-  created_at: string;
-}
+import { notificationService } from '../services/apiService';
+import { Notification } from '../types';
+import { Bell, Check, Clock } from 'lucide-react';
 
 const Notifications: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -17,7 +10,7 @@ const Notifications: React.FC = () => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await api.get('/notifications/');
+      const response = await notificationService.getNotifications();
       setNotifications(response.data);
     } catch (err) {
       console.error('Failed to fetch notifications');
@@ -32,43 +25,46 @@ const Notifications: React.FC = () => {
 
   const markAsRead = async (id: number) => {
     try {
-      await api.put(`/notifications/${id}`, { is_read: true });
+      await notificationService.markAsRead(id);
       setNotifications(notifications.map(n => n.id === id ? { ...n, is_read: true } : n));
     } catch (err) {
       console.error('Failed to mark as read');
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="container" style={{ paddingTop: '5rem', textAlign: 'center' }}>読み込み中...</div>;
 
   return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem' }}>
-        <Bell size={24} color="var(--primary-color)" />
-        <h1>Notifications</h1>
-      </div>
+    <div className="container">
+      <header style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2.5rem' }}>
+        <Bell size={28} color="var(--primary-color)" />
+        <h1 style={{ margin: 0 }}>通知</h1>
+      </header>
 
       <div className="notification-list">
         {notifications.length === 0 ? (
-          <p>No notifications.</p>
+          <div className="card" style={{ textAlign: 'center', padding: '4rem', borderStyle: 'dashed' }}>
+            <p style={{ color: 'var(--secondary-color)' }}>通知はありません。</p>
+          </div>
         ) : (
           notifications.map(n => (
             <div key={n.id} className={`notification-item ${n.is_read ? '' : 'unread'}`}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <Link to={n.link} onClick={() => !n.is_read && markAsRead(n.id)} style={{ textDecoration: 'none', color: 'inherit', flex: 1 }}>
-                  <p>{n.message}</p>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--secondary-color)' }}>
-                    {new Date(n.created_at).toLocaleString()}
-                  </span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                <Link to={n.link || '#'} onClick={() => !n.is_read && markAsRead(n.id)} style={{ textDecoration: 'none', color: 'inherit', flex: 1 }}>
+                  <p style={{ margin: '0 0 0.5rem 0', fontWeight: n.is_read ? 400 : 600 }}>{n.message}</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.75rem', color: 'var(--secondary-color)' }}>
+                    <Clock size={12} />
+                    <span>{new Date(n.created_at).toLocaleString()}</span>
+                  </div>
                 </Link>
                 {!n.is_read && (
                   <button 
                     onClick={() => markAsRead(n.id)}
                     className="btn-link"
-                    style={{ color: 'var(--success-color)', marginLeft: '1rem' }}
-                    title="Mark as read"
+                    style={{ color: 'var(--primary-color)', marginLeft: '1rem', padding: '0.5rem' }}
+                    title="既読にする"
                   >
-                    <Check size={18} />
+                    <Check size={20} />
                   </button>
                 )}
               </div>
