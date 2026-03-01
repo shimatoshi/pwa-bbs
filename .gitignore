@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Database
+pwa-bbs/backend/pwa_bbs.db
+*.sqlite3
+
+# Logs
+pwa-bbs/logs/
+*.log
+
+# OS
+.DS_Store
