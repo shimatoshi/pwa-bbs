@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { threadService, postService } from '../services/apiService';
-import { Thread, Post } from '../types';
+import type { Thread, Post } from '../types';
 import { Send, Reply, User, Clock } from 'lucide-react';
 
 const ThreadDetail: React.FC = () => {
@@ -23,7 +23,7 @@ const ThreadDetail: React.FC = () => {
           postService.getPosts(Number(id))
         ]);
         setThread(threadRes.data);
-        setPosts(threadsRes.data || postsRes.data); // backend naming consistency
+        setPosts(postsRes.data);
       } catch (err) {
         console.error('Failed to load thread', err);
         setError('スレッドの読み込みに失敗しました。');

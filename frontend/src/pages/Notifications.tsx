@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { notificationService } from '../services/apiService';
-import { Notification } from '../types';
+import type { Notification } from '../types';
 import { Bell, Check, Clock } from 'lucide-react';
 
 const Notifications: React.FC = () => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { threadService, categoryService } from '../services/apiService';
-import { Thread, Category } from '../types';
+import type { Thread, Category } from '../types';
 import { Plus } from 'lucide-react';
 import CategoryFilter from '../components/Home/CategoryFilter';
 import ThreadCard from '../components/Home/ThreadCard';

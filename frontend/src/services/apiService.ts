@@ -1,5 +1,5 @@
 import api from '../api';
-import { Category, Thread, Post, Notification } from '../types';
+import type { Category, Thread, Post, Notification } from '../types';
 
 export const threadService = {
   getThreads: (categoryId?: number) => 

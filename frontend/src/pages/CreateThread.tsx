@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { threadService, categoryService, postService } from '../services/apiService';
-import { Category } from '../types';
+import type { Category } from '../types';
 import { PlusCircle, AlertCircle } from 'lucide-react';
 
 const CreateThread: React.FC = () => {

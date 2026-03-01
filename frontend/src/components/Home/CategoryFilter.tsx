@@ -21,11 +21,11 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, selectedCat
           className={`badge ${selectedCategory === null ? 'active' : ''}`}
           onClick={() => onSelectCategory(null)}
           style={{ 
-            border: 'none', 
             cursor: 'pointer', 
             backgroundColor: selectedCategory === null ? 'var(--primary-color)' : 'var(--card-bg)', 
             color: selectedCategory === null ? 'white' : 'var(--secondary-color)',
-            border: selectedCategory === null ? 'none' : '1px solid var(--border-color)'
+            border: selectedCategory === null ? 'none' : '1px solid var(--border-color)',
+            padding: '0.5rem 1rem'
           }}
         >
           すべて
@@ -36,11 +36,11 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, selectedCat
             className={`badge ${selectedCategory === cat.id ? 'active' : ''} ${cat.is_readonly ? 'badge-readonly' : ''}`}
             onClick={() => onSelectCategory(cat.id)}
             style={{ 
-              border: 'none', 
               cursor: 'pointer', 
               backgroundColor: selectedCategory === cat.id ? 'var(--primary-color)' : 'var(--card-bg)', 
               color: selectedCategory === cat.id ? 'white' : (cat.is_readonly ? 'var(--danger-color)' : 'var(--secondary-color)'),
-              border: selectedCategory === cat.id ? 'none' : '1px solid var(--border-color)'
+              border: selectedCategory === cat.id ? 'none' : '1px solid var(--border-color)',
+              padding: '0.5rem 1rem'
             }}
           >
             {cat.name}
