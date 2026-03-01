@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Thread, Category } from '../../types';
+import type { Thread, Category } from '../../types';
 import { Clock, MessageSquare } from 'lucide-react';
 
 interface ThreadCardProps {
