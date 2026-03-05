@@ -1,5 +1,5 @@
 import api from '../api';
-import type { Category, Thread, Post, Notification } from '../types';
+import type { Category, Thread, Post, Notification, User } from '../types';
 
 export const threadService = {
   getThreads: (categoryId?: number) => 
@@ -23,6 +23,11 @@ export const postService = {
   
   createPost: (data: { content: string; thread_id: number; parent_id?: number }) => 
     api.post<Post>('/posts/', data),
+};
+
+export const userService = {
+  getCurrentUser: () => 
+    api.get<User>('/users/me/'),
 };
 
 export const notificationService = {

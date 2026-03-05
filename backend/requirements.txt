@@ -5,6 +5,6 @@ databases
 pydantic
 pydantic-settings
 python-multipart
-python-jose[cryptography]
-passlib[bcrypt]
+python-jose
+bcrypt
 email-validator

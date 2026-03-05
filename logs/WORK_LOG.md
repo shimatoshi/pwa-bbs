@@ -1,5 +1,23 @@
 # WORK_LOG.md
 
+## 2026-03-05 15:30 [master] @Gemini-CLI
+
+- **意図**: 管理者機能の強化と日常情報自動投稿スクリプトの実装
+- **内容**: 
+  - `backend/app/init_db.py`: カテゴリ初期化スクリプトの作成。
+  - `backend/scripts/post_weather.py`: Open-Meteo APIを使用して東京の天気を取得し、「日常情報」カテゴリに自動投稿するスクリプトを実装。
+  - `frontend/src/services/apiService.ts`: `userService.getCurrentUser()` を追加。
+  - `frontend/src/pages/CreateThread.tsx`: 管理者の場合は閲覧専用カテゴリも選択可能に修正。
+  - `frontend/src/pages/ThreadDetail.tsx`: 管理者の場合は閲覧専用カテゴリのスレッドにも返信可能に修正。
+  - 既存ユーザーを管理者へ昇格させるスクリプト `promote_admin.py` を実行。
+- **変更ファイル**: 
+  - backend/app/init_db.py (新規)
+  - backend/scripts/post_weather.py (新規)
+  - frontend/src/services/apiService.ts
+  - frontend/src/pages/CreateThread.tsx
+  - frontend/src/pages/ThreadDetail.tsx
+- **コミット**: `feat: 管理者機能の強化と天気情報の自動投稿スクリプトの実装`
+
 ## 2026-03-02 12:45 [master] @Gemini-CLI
 
 - **意図**: コンポーネント内の型インポートを import type に統一: Viteのランタイムエラーを完全に解消

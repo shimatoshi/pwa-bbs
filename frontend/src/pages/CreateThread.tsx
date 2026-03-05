@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { threadService, categoryService, postService } from '../services/apiService';
-import type { Category } from '../types';
+import { threadService, categoryService, postService, userService } from '../services/apiService';
+import type { Category, User } from '../types';
 import { PlusCircle, AlertCircle } from 'lucide-react';
 
 const CreateThread: React.FC = () => {
@@ -9,26 +9,37 @@ const CreateThread: React.FC = () => {
   const [categoryId, setCategoryId] = useState<number>(0);
   const [content, setContent] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
+  const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       try {
-        const response = await categoryService.getCategories();
-        const writableCats = response.data.filter(c => !c.is_readonly);
-        setCategories(writableCats);
-        if (writableCats.length > 0) {
-          setCategoryId(writableCats[0].id);
+        const [catRes, userRes] = await Promise.all([
+          categoryService.getCategories(),
+          userService.getCurrentUser()
+        ]);
+        
+        const currentUser = userRes.data;
+        setUser(currentUser);
+        
+        const availableCats = currentUser.is_admin 
+          ? catRes.data 
+          : catRes.data.filter(c => !c.is_readonly);
+          
+        setCategories(availableCats);
+        if (availableCats.length > 0) {
+          setCategoryId(availableCats[0].id);
         }
       } catch (err) {
-        console.error('Failed to fetch categories');
+        console.error('Failed to fetch data');
       } finally {
         setLoading(false);
       }
     };
-    fetchCategories();
+    fetchData();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

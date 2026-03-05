@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { threadService, postService } from '../services/apiService';
-import type { Thread, Post } from '../types';
+import { threadService, postService, userService } from '../services/apiService';
+import type { Thread, Post, User as UserType } from '../types';
 import { Send, Reply, User, Clock } from 'lucide-react';
 
 const ThreadDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [thread, setThread] = useState<Thread | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
   const [newPost, setNewPost] = useState('');
   const [replyTo, setReplyTo] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -24,6 +25,11 @@ const ThreadDetail: React.FC = () => {
         ]);
         setThread(threadRes.data);
         setPosts(postsRes.data);
+
+        if (token) {
+          const userRes = await userService.getCurrentUser();
+          setCurrentUser(userRes.data);
+        }
       } catch (err) {
         console.error('Failed to load thread', err);
         setError('スレッドの読み込みに失敗しました。');
@@ -32,7 +38,7 @@ const ThreadDetail: React.FC = () => {
       }
     };
     fetchThreadData();
-  }, [id]);
+  }, [id, token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,6 +61,7 @@ const ThreadDetail: React.FC = () => {
   if (loading) return <div className="container" style={{ paddingTop: '5rem', textAlign: 'center' }}>読み込み中...</div>;
 
   const isReadonly = thread?.category?.is_readonly;
+  const canPost = !isReadonly || currentUser?.is_admin;
 
   return (
     <div className="container">
@@ -89,7 +96,7 @@ const ThreadDetail: React.FC = () => {
               </span>
             </div>
             <p style={{ whiteSpace: 'pre-wrap', color: 'var(--text-color)', lineHeight: 1.6 }}>{post.content}</p>
-            {token && !isReadonly && (
+            {token && canPost && (
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.75rem' }}>
                 <button 
                   onClick={() => {
@@ -112,7 +119,7 @@ const ThreadDetail: React.FC = () => {
         <div className="card" style={{ marginTop: '2.5rem', textAlign: 'center', borderStyle: 'dashed' }}>
           <p style={{ color: 'var(--secondary-color)' }}>返信するにはログインが必要です。</p>
         </div>
-      ) : isReadonly ? (
+      ) : !canPost ? (
         <div className="card" style={{ marginTop: '2.5rem', textAlign: 'center', backgroundColor: 'rgba(51, 65, 85, 0.5)' }}>
           <p style={{ color: 'var(--secondary-color)' }}>このカテゴリは閲覧専用のため、返信できません。</p>
         </div>
